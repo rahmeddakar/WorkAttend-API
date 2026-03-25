@@ -20,6 +20,7 @@
     <PackageReference Include="SendGrid" Version="9.29.3" />
     <!-- Use ConfigurationManager on .NET Core / .NET 8 for compatibility with old ConfigurationManager usage -->
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+    <PackageReference Include="Twilio" Version="7.14.3" />
   </ItemGroup>
 
 </Project>

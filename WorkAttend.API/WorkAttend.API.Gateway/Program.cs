@@ -6,10 +6,12 @@ using NLog.Web;
 using System.Text;
 using WorkAttend.API.Gateway.BLL.InterfaceBLL;
 using WorkAttend.API.Gateway.BLL.ServicesBLL;
+using WorkAttend.API.Gateway.DAL.Common.Helper;
 using WorkAttend.API.Gateway.DAL.Repositories;
 using WorkAttend.API.Gateway.DAL.services.ActivityServices;
 using WorkAttend.API.Gateway.DAL.services.AdminPanelServices;
 using WorkAttend.API.Gateway.DAL.services.AdminsServices;
+using WorkAttend.API.Gateway.DAL.services.CompanyServices;
 using WorkAttend.API.Gateway.DAL.services.EmployeeServices;
 using WorkAttend.SecurityToken;
 
@@ -74,6 +76,9 @@ namespace WorkAttend
             builder.Services.AddScoped<IActivityService, ActivityService>();
             builder.Services.AddScoped<IAdminPanelManager, AdminPanelManager>();
             builder.Services.AddScoped<IAdminPanelService, AdminPanelService>();
+            builder.Services.AddScoped<ICompanyManager, CompanyManager>();
+            builder.Services.AddScoped<ICompanyService, CompanyService>();
+            builder.Services.AddScoped<CompanyRegistrationHelper, CompanyRegistrationHelper>();
 
             var jwtKey = builder.Configuration["JwtSettings:Key"];
             var jwtIssuer = builder.Configuration["JwtSettings:Issuer"];

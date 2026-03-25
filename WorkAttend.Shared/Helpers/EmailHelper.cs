@@ -14,7 +14,8 @@ namespace WorkAttend.Shared.Helpers
             string toEmail,
             string toName,
             string companyName,
-            string password)
+            string password,
+            string? loginUrl = null)
         {
             try
             {
@@ -30,6 +31,10 @@ namespace WorkAttend.Shared.Helpers
                     configuration["companyBaseURL"] ??
                     string.Empty;
 
+                var resolvedLoginUrl = !string.IsNullOrWhiteSpace(loginUrl)
+                    ? loginUrl
+                    : companyBaseUrl;
+
                 var displayName = new CultureInfo("en-US").TextInfo.ToTitleCase(toName ?? string.Empty);
 
                 string body = $@"
@@ -41,7 +46,7 @@ namespace WorkAttend.Shared.Helpers
                         <p><strong>Company:</strong> {companyName}</p>
                         <p><strong>Email:</strong> {toEmail}</p>
                         <p><strong>Password:</strong> {password}</p>
-                        <p><strong>Login URL:</strong> {companyBaseUrl}</p>
+                        <p><strong>Login URL:</strong> {resolvedLoginUrl}</p>
                     </body>
                     </html>";
 
