@@ -1,0 +1,73 @@
+﻿@model WorkAttend.EmailGenerator.Models.ContactUsModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Add some basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.4;
+            background-color: #f6f6f6;
+        }
+
+        table {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-collapse: collapse;
+            border-spacing: 0;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h3 style="text-align: center">
+            Request for Inquiry or Discussion
+        </h3>
+    </div>
+    <table>
+        <tr>
+            <th>Field</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>Business Name</td>
+            <td>@Model.BusinessName</td>
+        </tr>
+        <tr>
+            <td>Email Address</td>
+            <td>@Model.EmailAddress</td>
+        </tr>
+        <tr>
+            <td>Phone Number</td>
+            <td>@Model.PhoneNo</td>
+        </tr>
+        <tr>
+            <td>Country</td>
+            <td>@Model.Country</td>
+        </tr>
+        <tr>
+            <td>Business Type</td>
+            <td>@Model.BusinessType</td>
+        </tr>
+        <tr>
+            <td>Number Of Locations</td>
+            <td>@Model.Locations</td>
+        </tr>
+    </table>
+</body>
+</html>

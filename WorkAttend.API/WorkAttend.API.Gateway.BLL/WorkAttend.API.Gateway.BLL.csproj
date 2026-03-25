@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>WorkAttend.API.Gateway.BLL</AssemblyName>
+    <RootNamespace>WorkAttend.API.Gateway.BLL</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EPPlus" Version="7.1.1" />
+    <PackageReference Include="RestSharp" Version="106.12.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\WorkAttend.Shared\WorkAttend.Shared.csproj" />
+    <ProjectReference Include="..\WorkAttend.API.Gateway.DAL\WorkAttendAPI.Gateway.DAL.csproj" />
+  </ItemGroup>
+
+</Project>

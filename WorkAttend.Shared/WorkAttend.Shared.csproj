@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="DataServices\**" />
+    <EmbeddedResource Remove="DataServices\**" />
+    <None Remove="DataServices\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Apis.Auth" Version="1.67.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+    <PackageReference Include="MySql.Data" Version="8.0.29" />
+    <PackageReference Include="NLog" Version="6.1.1" />
+    <PackageReference Include="PetaPoco" Version="5.1.306" />
+    <PackageReference Include="SendGrid" Version="9.29.3" />
+    <!-- Use ConfigurationManager on .NET Core / .NET 8 for compatibility with old ConfigurationManager usage -->
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>

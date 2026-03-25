@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>WorkAttend.API.Gateway.DAL</AssemblyName>
+    <RootNamespace>WorkAttend.API.Gateway.DAL</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="services\CommonService\**" />
+    <EmbeddedResource Remove="services\CommonService\**" />
+    <None Remove="services\CommonService\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="services\CommonService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="9.6.0" />
+    <PackageReference Include="PetaPoco.Compiled" Version="6.0.683" />
+    <PackageReference Include="PetaPoco.RelationExtensions" Version="1.0.2" />
+    <PackageReference Include="Serilog" Version="4.3.0" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+    <!-- Configuration packages for .NET Core -->
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\WorkAttend.Model\WorkAttend.Model.csproj" />
+    <ProjectReference Include="..\..\WorkAttend.Shared\WorkAttend.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

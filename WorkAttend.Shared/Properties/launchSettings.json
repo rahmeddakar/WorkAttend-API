@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Sample": {
+      "commandName": "Project"
+    },
+    "WorkAttend.Shared": {
+      "commandName": "Project"
+    }
+  }
+}

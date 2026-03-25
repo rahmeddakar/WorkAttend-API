@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "WorkAttend.API.Gateway.BLL": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DATABASE_PASSWORD": "password",
+        "DATABASE_NAME": "database",
+        "SERVER_NAME": "localhost",
+        "DATABASE_PORT": "3306"
+      }
+    }
+  }
+}

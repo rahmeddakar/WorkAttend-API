@@ -1,0 +1,377 @@
+﻿@model WorkAttend.Model.SellDetailModel
+@using WorkAttend.Shared.Extensions
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    /* Create two equal columns that floats next to each other */
+    .column-abc123 {
+        float: left;
+        width: 50%;
+        padding: 10px;
+    }
+
+    .columnRight-abc123 {
+        float: right;
+        width: 50%;
+        padding: 10px;
+        text-align: right
+    }
+    /* Clear floats after the columns */
+    .row-abc123:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    #m_6744900894530991331hashash:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    #m_123123123123col {
+        float: left;
+        width: 50%;
+        padding: 10px;
+    }
+
+    #m_123123123123colri {
+        float: right;
+        width: 50%;
+        padding: 10px;
+        text-align: right
+    }
+
+    .reciept-font-size-danger :first-child {
+        color: #000;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        font-size: 38px !important;
+    }
+</style>
+
+<div>
+    <div>
+        <div style="width:100%;background-color:#f0f4f4;color:#3a4953;font-family:'Lato','Helvetica Neue',Helvetica,sans-serif">
+            <div class="adM">
+            </div>
+            <section style="padding: 5px;">
+                <div style="margin-top: 5px;text-align: center">
+                    @{
+                        if (Model.ReceiptTemplate != null)
+                        {
+                            if (!string.IsNullOrEmpty(@Model.ReceiptTemplate.HeadImageURL))
+                            {
+                                        <img src=@Model.ReceiptTemplate.HeadImageURL alt="avatar" />
+                            }
+                        }
+                    }
+
+                </div>
+                <div style="margin-top: 5px;text-align: center">
+                    @{
+                        if (Model.ReceiptTemplate != null)
+                        {
+                            if (!string.IsNullOrEmpty(Model.ReceiptTemplate.HeadInfoHtml))
+                            {
+                                        <div className="reciept-font-size-danger">
+                                            @Html.Raw(Model.ReceiptTemplate.HeadInfoHtml)
+                                        </div>
+
+                            }
+                        }
+                    }
+
+                </div>
+
+            </section>
+
+            <section>
+
+
+                <section>
+                    <div style="text-align: center; margin-top: 5px;line-height: 1.3;">
+                        <h1 style="margin: 0px;">@Model.StoreName</h1>
+                        <div style="color:#3a4953;">
+                            <p style="margin: 0px;">
+                                @Model.OutletName
+                            </p>
+                            <p style="margin: 0px;">
+                                Served by: @Model.SoldBy at @Model.RegisterName
+                            </p>
+                        </div>
+
+                    </div>
+                </section>
+
+                <hr />
+                <section style="color:#3a4953">
+                    <div>
+                        <table style="padding-left: 35px">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: left" colspan="2">
+                                        <span>Receipt / Tax Invoice #@Model.ReceiptCode</span>
+                                    </th>
+                                    <th style="text-align: right" colspan="2">@Model.SellDate</th>
+                                </tr>
+                                <tr style="height:20px">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var prod in Model.Products)
+                                {
+                                    <tr>
+                                        <td>@prod.DisplayQuantity</td>
+                                        <td>
+                                            @prod.ProductName
+                                        </td>
+                                        <td style="
+                                                width:100px;
+                                                text-decoration:
+                                                line-through;
+                                                font-size: 15px;
+                                                text-align: right;
+                                                padding-right: 10px;
+                                                ">
+                                            @if (prod.SalesItemDiscount > 0)
+                                            {
+                                                <text>@(prod.TotalPrice + prod.SalesItemDiscount)</text>
+                                            }
+                                            else
+                                            {
+                                                <text>@string.Empty</text>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div style="width:100%;height:100%">
+                                                @(Model.currencyData != null ? Model.currencyData.CurrencyCode : string.Empty) @prod.TotalPrice
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    @*<tr style="height:5px">*@
+                                    <tr >
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td></td>
+                                        <td style="font-size: 14px">
+                                            @if (prod.Promotions != null && prod.Promotions.Any() && !string.IsNullOrEmpty(prod.Promotions.FirstOrDefault().PromotionName))
+                                            {
+                                                <text>
+                                                    Promo: @(prod.Promotions.FirstOrDefault().PromotionName)
+                                                    (@(Model.currencyData != null ? Model.currencyData.CurrencyCode : string.Empty) @(prod.Promotions.FirstOrDefault().PromotionValue) off)
+                                                </text>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(prod.ProductNote))
+                                            {
+                                                <text>
+                                                    Note: @(prod.ProductNote)
+                                                </text>
+                                            }
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+
+                                    @*<tr style="height:20px">*@
+                                    <tr >
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                }
+
+                                <tr style="height:20px">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                                <tr>
+                                    <td></td>
+                                    <td colspan="2"><strong>Subtotal</strong></td>
+                                    <td>@(Model.currencyData != null ? Model.currencyData.CurrencyCode : string.Empty) @(Model.TotalPrice)</td>
+                                </tr>
+
+                                <tr style="height:5px">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                                <tr>
+                                    <td></td>
+                                    <td colspan="2"><strong>Total Tax</strong> <span class="m_-4803599237630157436vd-text-supplementary">(@(Model.TaxesSum.Count) taxes)</span></td>
+                                    <td>@(Model.currencyData != null ? Model.currencyData.CurrencyCode : string.Empty) @Model.TotalTax</td>
+                                </tr>
+
+                                @*  @foreach (var tax in Model.Taxes.UniqueBy(a => a.STaxID.DecryptID()))
+                                {
+                                <tr>
+                                <td></td>
+                                <td colspan="2">
+                                @tax.SaleTaxName (@tax.TaxValue%)
+                                </td>
+                                <td>@(Model.currencyData != null ? Model.currencyData.CurrencyCode : string.Empty) @tax.TaxPrice</td>
+                                </tr>
+                                }*@
+
+                                @foreach (var tax in Model.TaxesSum)
+                                {
+                                    <tr>
+                                        <td></td>
+                                        <td colspan="2">
+                                            @tax.SaleTaxName (@tax.TaxValue%)
+                                        </td>
+                                        <td>@(Model.currencyData != null ? Model.currencyData.CurrencyCode : string.Empty) @tax.TaxPrice</td>
+                                    </tr>
+                                }
+
+
+
+                                <tr style="">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr style="height:20px">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+
+                        @if (!string.IsNullOrEmpty(Model.FirstName))
+                        {
+                            <hr />
+                            <table>
+                                <tr>
+                                    <td style="width: 83%; padding: 7px;">
+                                        <strong>Customer:</strong>
+                                    </td>
+                                    <td style="">
+                                        <strong>
+                                            @Model.FirstName @Model.LastName
+                                        </strong>
+                                    </td>
+                                </tr>
+
+                                <tr style="height:10px">
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        }
+
+                        <hr />
+
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td style="text-decoration: underline; padding-left: 4px">Payment By:</td>
+                                </tr>
+
+                                @foreach (var pay in Model.Payments)
+                                {
+                                    <tr>
+                                        <td></td>
+                                        <td colspan="2">@pay.PaymentName </td>
+                                        <td style="width: 30%"></td>
+                                        <td style="text-align: right">
+                                            @(Model.currencyData != null ? Model.currencyData.CurrencyCode : string.Empty) @pay.Amount
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        <hr />
+
+                        <table>
+                            <tr>
+                                <td style="width: 82%; text-decoration: underline; padding: 7px;">
+                                    <strong>TOTAL</strong>
+                                </td>
+                                <td style="">
+                                    <strong>@(Model.currencyData != null ? Model.currencyData.CurrencyCode : string.Empty) @(Model.TotalPrice + Model.TotalTax)</strong>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <hr />
+
+                        @*   <table>
+                        <tr>
+                        <td style="width: 89%">
+                        <strong>Balance</strong>
+                        </td>
+                        <td style="text-align: right">
+                        <strong>@(Model.currencyData != null ? Model.currencyData.CurrencyCode : string.Empty) @Model.Balance</strong>
+                        </td>
+                        </tr>
+                        </table>*@
+
+                        @{
+                            if (Model.IsLoyaltyActive)
+                            {
+                                        <div style="margin-top: 10px">
+                                            <p style="padding: 10px">
+                                                Register your details with the <strong>@Model.StoreName</strong> Loyalty Program for benefits
+                                                <br>
+                                                @*<a href="https://rosewater.vendhq.com/loyalty/claim/zppftg?source=email_receipt" target="_blank" data-saferedirecturl="https://www.google.com/url?q=https://rosewater.vendhq.com/loyalty/claim/zppftg?source%3Demail_receipt&amp;source=gmail&amp;ust=1627346717456000&amp;usg=AFQjCNE6jxy6q4CXsPmCYnWnb187CHfwyQ">https://rosewater.vendhq.com/<wbr>loyalty/claim/zppftg?source=<wbr>email_receipt</a>*@
+                                            </p>
+                                        </div>
+                            }
+                        }
+
+                    </div>
+                </section>
+            </section>
+
+
+            <section>
+
+                <div style="line-height: 0.6;padding:5px;text-align: center">
+                    @{
+                        if (Model.ReceiptTemplate != null)
+                        {
+                            if (!string.IsNullOrEmpty(Model.ReceiptTemplate.FooterHtml))
+                            {
+                                        <div className="reciept-font-size-danger">
+                                            @Html.Raw(Model.ReceiptTemplate.FooterHtml)
+                                        </div>
+
+                            }
+                        }
+                    }
+                    <p style="font-size:7px;">Ref No: @Model.Receipt</p>
+
+                </div>
+
+            </section>
+
+        </div>
+    </div>
+</div>

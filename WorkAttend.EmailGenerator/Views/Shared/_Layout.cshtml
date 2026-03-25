@@ -1,0 +1,376 @@
+﻿@using WorkAttend.EmailGenerator.Models
+@{
+    BaseModel basemodel = new BaseModel();
+    basemodel.LangID = ViewBag.LangID != null ? ViewBag.LangID : (short)2;
+
+    bool isSubscriptionRequest = basemodel.IsSubscriptionRequest;
+    //bool isPointRequest = basemodel.IsPointRequest;
+    string subscriptionRequestTableWidth = isSubscriptionRequest ? "176%" : "600px";
+    string mainDivStyle = isSubscriptionRequest ? "" : "width: 620px; margin: 0 auto;";
+}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+    @if (basemodel.LangID == 1)
+    {
+        <div style='@mainDivStyle'>
+            @{
+                string mainTableStyle = isSubscriptionRequest ? "width: 80%; margin: 0 auto;" : string.Empty;
+            }
+            <table align="right" cellpadding="0" cellspacing="0" style='border-radius: 3px; border: 0px solid #DDE4E9; color: #666;@mainTableStyle' align="center">
+                <tr>
+                    <td>
+                        @{
+                            string TableStyle = isSubscriptionRequest ? "" : "width: 600px;";
+                        }
+                        <table align="right" style='@TableStyle direction: rtl;' cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                @{
+                                    TableStyle = isSubscriptionRequest ? "" : "width: 250px;";
+                                }
+                                <td style="@TableStyle height: 60px; padding-bottom:10px;">
+                                    <img src="@basemodel.EmailImagesPath/logo-ar.png" der="0" />
+                                </td>
+                                @{
+                                    TableStyle = isSubscriptionRequest ? "" : "width: 350px; height: 60px; padding-right: 10px;";
+                                }
+                                @if (IsSectionDefined("secondaryLogo"))
+                                {
+                                    @RenderSection("secondaryLogo")
+                                }
+                                @*<td style='@TableStyle'>
+                                        <table cellpadding="0" cellspacing="0" border="0">background: #f8f8f8;
+                                        <tr>
+                                            <td style="width: 81px; height: 51px;">
+                                                <img src="@basemodel.EmailImagesPath/blue-icon.jpg" width="81" height="51" style="display:block;" border="0" /></td>
+                                            <td style="width: 170px; font-family: Tahoma, Geneva, sans-serif;">
+                                                <div style="color: #298fb1; margin-right: 10px; font-size: 14px;">برعاية - الراعي الماسي</div>
+                                                <div style="color: #666666; margin-right: 10px; font-size: 16px; font-weight: bold;">مصرف الراجحي</div>
+                                            </td>
+                                            <td style="width: 85px;">
+
+                                                <table cellpadding="2" cellspacing="0" border="0" align="left">
+                                                    <tr>
+                                                        <td>&nbsp;</td>
+                                                        <td><a href="#">
+                                                            <img src="@basemodel.EmailImagesPath/user-icon.jpg" width="23" height="23" border="0"/></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="#">
+                                                            <img src="@basemodel.EmailImagesPath/web-icon.jpg" width="23" height="23" border="0" /></a></td>
+                                                        <td><a href="#">
+                                                            <img src="@basemodel.EmailImagesPath/mail-icon.jpg" width="23" height="23"  border="0"/></a></td>
+                                                    </tr>
+                                                </table>
+
+
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                    </td>*@
+
+                            </tr>
+
+                        </table>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td style="direction: rtl;">
+                        @{
+                            TableStyle = isSubscriptionRequest ? "width: 100%;" : "width: 600px;";
+                        }
+                        <table style='@TableStyle' cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td style="height: 10px; background: #666666;"></td>
+                            </tr>
+                            @if (IsSectionDefined("toprow"))
+                            {
+                                @RenderSection("toprow")
+                            }
+                            @if (isSubscriptionRequest)
+                            {
+                                <tr>
+                                    <td>
+                                        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 4px 0; border: 1px solid #f8f8f8;">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="height: 35px; width: 20px; padding-right: 15px; padding-left: 5px;">
+                                                        <img src="https://cdn0.iconfinder.com/data/icons/set-app-incredibles/24/Edit-01-512.png" width="20" height="35" style="display:block;" border="0" />
+                                                    </td>
+                                                    <td style="font-family: Tahoma, Geneva, sans-serif;">New Subscription</td>
+                                                    <td style="height: 35px; width: 84px;">
+                                                        <img src="@basemodel.EmailImagesPath/subsriber-left-img.png" width="84" height="35" style="float:left; display:block;" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </td>
+                                </tr>
+                            }
+                            @*else if (isPointRequest)
+                                {
+                                    <tr>
+                                        <td>
+                                            <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 4px 0; border: 1px solid #f8f8f8;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="height: 35px; width: 20px; padding-right: 15px; padding-left: 5px;">
+                                                            <img src="@basemodel.EmailImagesPath/edit-icon.jpg" width="20" height="35" style="display:block;" border="0" />
+                                                        </td>
+                                                        <td style="font-family: Tahoma, Geneva, sans-serif;">Points Request</td>
+                                                        <td style="height: 35px; width: 84px;">
+                                                            <img src="@basemodel.EmailImagesPath/subsriber-left-img.png" width="84" height="35" style="float:left; display:block;" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </td>
+                                    </tr>
+                                }*@
+                            <tr>
+                                @{
+                                    TableStyle = isSubscriptionRequest ? "" : "width: 600px; max-width: 600px;";
+                                }
+                                <td style="@TableStyle background: #f7f7f7; color: #666666; direction: rtl; font-family: Tahoma, Geneva, sans-serif; padding-bottom: 50px; padding-left: 50px; padding-right: 50px; padding-top: 20px;">
+                                    @RenderBody()
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top: 10px; direction: rtl;">
+                            <tr>
+                                @{
+                                    TableStyle = isSubscriptionRequest ? "" : "width: 437px;";
+
+                                }
+                                <td style="@TableStyle">
+                                    @{
+                                        TableStyle = isSubscriptionRequest ? "" : "width: 410px;";
+
+                                    }
+                                    <div style="@TableStyle border: 2px solid #dedede; border-radius: 5px; overflow: hidden; padding: 10px;">
+                                        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                            <tr>
+                                                <td style="width: 112px;">
+                                                    <div style="font-size: 13px; font-weight: bold; font-family: Tahoma, Geneva, sans-serif;">خدمة العملاء</div>
+
+                                                </td>
+                                                <td style="width: 195px; padding: 0 3px 0 0; text-align: right;">
+                                                    <div style="font-size: 24px; color: #298fb1; direction: ltr; padding-right: 5px;">92000 7759</div>
+                                                    <div style=" direction:rtl;font-size: 10px; color: #9d9d9d; font-family: Tahoma, Geneva, sans-serif;">
+                                                        من خارج المملكة العربية السعودية:<div style="direction: ltr;"> +966 92000 7759</div>
+                                                    </div>
+                                                </td>
+                                                <td style="border-right: 1px solid #dedede; padding-right: 12px;">
+                                                    <table>
+                                                        <tr>
+                                                            <td style="width: 16px;"></td>
+                                                            @*<td style="padding-right: 3px;"><a href="#">
+                                                                <img src="@basemodel.EmailImagesPath/fb-icon.jpg" width="20" height="20" border="0" /></a></td>*@
+                                                            <td style="padding-right: 3px;">
+                                                                <a href="https://twitter.com/dakar">
+                                                                    <img src="https://cdn2.iconfinder.com/data/icons/metro-uinvert-dock/256/Twitter_NEW.png" width="19" height="20" border="0" />
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="3">
+                                                                <span style="font-size: 10px; font-family: Tahoma, Geneva, sans-serif; color: #9d9d9d; padding-left: 5px;">تابعنا علي تويتر</span>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                </td>
+                                <td style="width: 165px;">
+                                    <div style="direction:ltr; margin-left: 10px; padding-left: 10px; float: right; color: #9d9d9d">
+
+                                        <img src="@basemodel.EmailImagesPath/logo-ar.png" width="100" height="34" />
+                                        <div style="font-size: 13px; font-family: Tahoma, Geneva, sans-serif;"></div>
+                                        <div style="font-size: 14px;"><a href="https://www.dakarsolutions.com/ar" style="color: #9d9d9d; text-decoration: none; font-family: Tahoma, Geneva, sans-serif" target="_blank">https://www.dakarsolutions.com/ar</a></div>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+
+                                    <p>هذا البريد الاليكتروني لتأكيد او تحديث حالات الاشتراكات. في حالة وجود أي استفسارات او شكاوي يرجي الرد علي نفس الرسالة</p>
+                                    <p><a href="https://www.dakarsolutions.com/ar/static-contents/privacypolicy" target="_blank">الشروط والاحكام</a> | <a href="https://www.dakarsolutions.com/ar/static-contents/termsandconditions" target="_blank">سياسة الخصوصية</a></p>
+
+
+
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td style="color: #9d9d9d; font-size: 12px; padding-top: 5px; font-family: Tahoma, Geneva, sans-serif; direction:rtl;">
+                        @if (IsSectionDefined("IgnoreMessage"))
+                        {
+                            @RenderSection("IgnoreMessage")
+                        }
+                        else
+                        {
+                            @*<p>إذا لم تكن المستخدم المقصود لهذا البريد الإلكتروني، يرجى تجاهل هذه الرسالة وإبلاغنا بذلك.</p>*@
+                        }
+
+                    </td>
+                </tr>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div style='@mainDivStyle'>
+            @{
+                string mainTableStyle = isSubscriptionRequest ? "width: 80%; margin: 0 auto;" : string.Empty;
+            }
+            <table cellpadding="0" cellspacing="0" style='border-radius: 3px; border: 0px solid #DDE4E9; color: #666;@mainTableStyle' align="center">
+                <tr>
+                    <td>
+                        @{
+                            string TableStyle = isSubscriptionRequest ? "" : "width: 600px;";
+                        }
+                        <table style='@TableStyle' cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                @{
+                                    TableStyle = isSubscriptionRequest ? "" : "width: 250px;";
+                                }
+                                <td style="@TableStyle height: 60px;">
+                                    @*<img src="https://www.dakarsoftware.com/wp-content/uploads/2019/11/dakar-logo-150.png" der="0" />*@
+                                </td>
+                                @{
+                                    TableStyle = isSubscriptionRequest ? "" : "width: 350px; height: 60px; padding-right: 10px;";
+                                }
+                                @if (IsSectionDefined("secondaryLogo"))
+                                {
+                                    @RenderSection("secondaryLogo")
+                                }
+                                else
+                                {
+                                    <td style='@TableStyle'>
+                                        @*<table cellpadding="0" cellspacing="0" border="0">background: #f8f8f8;
+                                                <tr>
+                                                    <td style="width: 81px; height: 51px;">
+                                                        <img src="@basemodel.EmailImagesPath/blue-icon.jpg" width="81" height="51" style="display:block;" border="0" /></td>
+                                                    <td style="width: 170px; font-family: Tahoma, Geneva, sans-serif;">
+                                                        <div style="color: #298fb1; margin-right: 10px; font-size: 14px;">برعاية - الراعي الماسي</div>
+                                                        <div style="color: #666666; margin-right: 10px; font-size: 16px; font-weight: bold;">مصرف الراجحي</div>
+                                                    </td>
+                                                    <td style="width: 85px;">
+
+                                                        <table cellpadding="2" cellspacing="0" border="0" align="left">
+                                                            <tr>
+                                                                <td>&nbsp;</td>
+                                                                <td><a href="#">
+                                                                    <img src="@basemodel.EmailImagesPath/user-icon.jpg" width="23" height="23" border="0"/></a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><a href="#">
+                                                                    <img src="@basemodel.EmailImagesPath/web-icon.jpg" width="23" height="23" border="0" /></a></td>
+                                                                <td><a href="#">
+                                                                    <img src="@basemodel.EmailImagesPath/mail-icon.jpg" width="23" height="23"  border="0"/></a></td>
+                                                            </tr>
+                                                        </table>
+
+
+                                                    </td>
+                                                </tr>
+
+                                            </table>*@
+                                    </td>
+                                }
+                            </tr>
+
+                        </table>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td style="direction: ltr;">
+                        @{
+                            TableStyle = isSubscriptionRequest ? "width: 100%;" : "width: 600px;";
+                        }
+                        <table style='@TableStyle' cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td style="height: 10px; background: #666666;"></td>
+                            </tr>
+                            @if (IsSectionDefined("toprow"))
+                            {
+                                @RenderSection("toprow")
+                            }
+                            @if (isSubscriptionRequest)
+                            {
+                                <tr>
+                                    <td>
+                                        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 4px 0; border: 1px solid #f8f8f8;">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="height: 35px; width: 20px; padding-right: 15px; padding-left: 5px;">
+                                                        <img src="https://cdn0.iconfinder.com/data/icons/set-app-incredibles/24/Edit-01-512.png" width="20" height="35" style="display:block;" border="0" />
+                                                    </td>
+                                                    <td style="font-family: Tahoma, Geneva, sans-serif;">New Subscription</td>
+                                                    <td style="height: 35px; width: 84px;">
+                                                        <img src="@basemodel.EmailImagesPath/subsriber-left-img.png" width="84" height="35" style="float:left; display:block;" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </td>
+                                </tr>
+                            }
+                            @*else if (isPointRequest)
+                                {
+                                    <tr>
+                                        <td>
+                                            <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 4px 0; border: 1px solid #f8f8f8;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="height: 35px; width: 20px; padding-right: 15px; padding-left: 5px;">
+                                                            <img src="@basemodel.EmailImagesPath/edit-icon.jpg" width="20" height="35" style="display:block;" border="0" />
+                                                        </td>
+                                                        <td style="font-family: Tahoma, Geneva, sans-serif;">Points Request</td>
+                                                        <td style="height: 35px; width: 84px;">
+                                                            <img src="@basemodel.EmailImagesPath/subsriber-left-img.png" width="84" height="35" style="float:left; display:block;" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </td>
+                                    </tr>
+                                }*@
+                            <tr>
+                                @{
+                                    TableStyle = isSubscriptionRequest ? "" : "width: 600px; max-width: 600px;";
+                                }
+                                <td style="@TableStyle background: #f7f7f7; color: #666666; direction: ltr; font-family: Tahoma, Geneva, sans-serif; padding-bottom: 50px; padding-left: 50px; padding-right: 50px; padding-top: 20px;">
+                                    @RenderBody()
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    }
+</body>
+</html>

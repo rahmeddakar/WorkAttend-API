@@ -1,0 +1,122 @@
+@model WorkAttend.EmailGenerator.Models.SubPaymentModel
+
+<!doctype html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Thank you for subscribing to our service! Email Template</title>
+
+  </head>
+
+<body style="margin: 0; padding: 0;">
+	
+   <table border="0" cellpadding="0" cellspacing="0" width="100%">
+	   
+	   <tr> 
+	   <td>
+		   
+		   <table width="900" border="0" cellpadding="0" cellspacing="0" valign="middle" align="center">
+  <tbody>
+	  
+	  <tr> <td colspan="3">&nbsp;</td> </tr>
+	   <tr> <td colspan="3">&nbsp;</td> </tr>
+	  <tr> <td colspan="3">&nbsp;</td> </tr>
+	   
+	   
+	   <tr>   
+	   <td colspan="3" style="text-align: center;">
+	   <a href="#"><img src="https://data.WorkAttend.com/resources/email_image/buzztill-logo.png" alt="Buzztill Logo" width="120px" ></a>
+	   </td> 
+	   </tr>
+	   
+	   <tr> 
+	   <td colspan="3">&nbsp;</td>
+	   </tr>
+
+	  
+	   <tr style="background-color: #f1f1f1;">
+		   
+		   <td width="53" >&nbsp;</td>
+					
+		<td width="447">
+            			<br><br><br>
+            				<h2 style="color: #555050; font-size: 22px;margin: 0; font-family:arial;">Thank you for subscribing to our service!</h2>
+			<br>
+            				<p style="color: #4a4a4a; font-size: 15px; font-family: arial;line-height: 22px;margin: 0;">Dear @Model.UserName,</p>
+			<br>
+							<p style="color: #4a4a4a; font-size: 15px; font-family: arial;line-height: 22px;margin: 0;">
+								<strong>Subscription Details</strong>
+			</p>
+			<br>
+			<p style="color: #4a4a4a; font-size: 15px; font-family: arial;line-height: 22px;margin: 0;"> <strong>Store Name:</strong> @Model.StoreName</p>
+			<p style="color: #4a4a4a; font-size: 15px; font-family: arial;line-height: 22px;margin: 0;"> <strong>Subscription Plan:</strong> @Model.PlanName</p>
+			<p style="color: #4a4a4a; font-size: 15px; font-family: arial;line-height: 22px;margin: 0;"> <strong>Subscription Price:</strong> @Model.PlanPrice @Model.Currency</p>
+			<p style="color: #4a4a4a; font-size: 15px; font-family: arial;line-height: 22px;margin: 0;"> <strong>Next Payment Date:</strong> @Model.NextPaymentDate</p>
+			<p style="color: #4a4a4a; font-size: 15px; font-family: arial;line-height: 22px;margin: 0;"> <strong>Number of Outlets:</strong> @Model.NbrOfOutlet</p>
+			<p style="color: #4a4a4a; font-size: 15px; font-family: arial;line-height: 22px;margin: 0;"> <strong>Number of Registers:</strong> @Model.NbrOfRegister</p>
+			<p style="color: #4a4a4a; font-size: 15px; font-family: arial;line-height: 22px;margin: 0;"> <strong>Business Reporting:</strong> @Model.HasAnalytics</p>
+			<br>
+			<a href="@Model.LoginURL" target="_blank">
+				<img src="https://data.WorkAttend.com/resources/email_image/mypss.png"  alt="" width="249px" height="52px;">
+			</a>
+            				<br><br>
+							<p style="color: #4a4a4a; font-size: 15px; font-family: arial;line-height: 22px;margin: 0;">
+								If you have any questions or need assistance, please don't hesitate to contact us at <a href="#">@Model.ContactUs</a>
+Thank you again for choosing our service!
+			</p>
+			
+			<br>
+							<p style="color: #4a4a4a; font-size: 15px; font-family: arial;line-height: 22px;margin: 0;">Best regards,</p>
+			<br>
+							<p style="color: #4a4a4a; font-size: 15px; font-family: arial;line-height: 22px;margin: 0;">POS Provider Team</p>
+			<br><br><br>
+            		
+            		</td>
+					
+        <td width="400" valign="middle">
+        <img src="https://data.WorkAttend.com/resources/email_image/high-five.png" alt="" style="width: 400px; max-width: 600px; height: auto; margin: auto; display: block;">
+        </td>
+          			
+        </tr>
+	  
+	  <tr> 
+	  <td colspan="3">&nbsp;</td> 
+	  </tr>
+	  
+	  
+	  <tr>
+		  <td colspan="3">
+			  <p style="color: #4a4a4a; font-size: 15px; font-family: arial;line-height: 22px;margin: 0;">Copyright DAKAR POS ©2024</p>
+		  </td>
+	  </tr>
+	 
+	  												
+    
+  </tbody>
+</table>
+
+		   
+	   </td> 
+	   </tr>
+	   
+	   
+	   
+	   
+	   
+          	</table>
+   
+		
+	
+	
+
+
+      
+     
+
+   
+</body>
+</html>
