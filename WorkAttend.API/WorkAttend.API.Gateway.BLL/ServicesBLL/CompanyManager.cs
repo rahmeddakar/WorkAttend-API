@@ -7,7 +7,9 @@ using WorkAttend.API.Gateway.BLL.InterfaceBLL;
 using WorkAttend.API.Gateway.DAL.Common.Helper;
 using WorkAttend.API.Gateway.DAL.services.AdminsServices;
 using WorkAttend.API.Gateway.DAL.services.CompanyServices;
+using WorkAttend.API.Gateway.DAL.services.DepartmentServices;
 using WorkAttend.Model.Models;
+using WorkAttend.Shared.Enums;
 using WorkAttend.Shared.Helpers;
 
 namespace WorkAttend.API.Gateway.BLL.ServicesBLL
@@ -21,17 +23,23 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
         private readonly CompanyRegistrationHelper _companyRegistrationHelper;
         private readonly IAdminsService _adminsService;
         private readonly IConfiguration _configuration;
+        private readonly IDepartmentService _departmentService;
+        private readonly IUserAccessContextManager _userAccessContextManager;
 
         public CompanyManager(
             ICompanyService companyService,
             CompanyRegistrationHelper companyRegistrationHelper,
             IAdminsService adminsService,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IDepartmentService departmentService,
+            IUserAccessContextManager userAccessContextManager)
         {
             _companyService = companyService;
             _companyRegistrationHelper = companyRegistrationHelper;
             _adminsService = adminsService;
             _configuration = configuration;
+            _departmentService = departmentService;
+            _userAccessContextManager = userAccessContextManager;
         }
 
         public async Task<ApiResponse<RegisterCompanyPageData>> GetRegisterDataAsync()
@@ -486,6 +494,171 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
             }
         }
 
+        public async Task<ApiResponse<RegisterNewCompanyResult>> RegisterNewCompanyAsync(CurrentUserContext ctx, registerNewCompany registerModel)
+        {
+            try
+            {
+                var accessContext = await ResolveAccessContextAsync(ctx);
+                if (accessContext == null)
+                {
+                    return new ApiResponse<RegisterNewCompanyResult>
+                    {
+                        Success = false,
+                        Message = "Unauthorized",
+                        Data = null
+                    };
+                }
+
+                var companySub = await _adminsService.GetActivePackageData(accessContext.BaseCompanyId, (int)Constants.Features.Company);
+                var companySubscriptionPackageFeatureValue = await _adminsService.GetCompanySubscriptionFeatures(accessContext.BaseCompanyId, (int)Constants.Features.Company);
+                int currentCompanyCount = await _companyService.GetDatabaseCompanyCountAsync(accessContext.DatabaseName);
+
+                if (companySub == null)
+                {
+                    return new ApiResponse<RegisterNewCompanyResult>
+                    {
+                        Success = false,
+                        Message = "Subscription information not found.",
+                        Data = null
+                    };
+                }
+
+                int maxCompanyCount =
+                    companySubscriptionPackageFeatureValue != null && companySubscriptionPackageFeatureValue.Count > 0
+                        ? companySubscriptionPackageFeatureValue[0].FeatureValue
+                        : companySub.FeatureValue;
+
+                if (!(currentCompanyCount < maxCompanyCount || companySub.FeatureValue == -1))
+                {
+                    return new ApiResponse<RegisterNewCompanyResult>
+                    {
+                        Success = false,
+                        Message = "Subscription limit reached.",
+                        Data = null
+                    };
+                }
+
+                var permissionActions = PermissionHelper.GetAllowedActions(accessContext.Policy, "newcompany");
+                bool isAllowed = permissionActions.Contains(ActionTypeEnum.Create.ToString().ToLower());
+
+                if (!isAllowed)
+                {
+                    return new ApiResponse<RegisterNewCompanyResult>
+                    {
+                        Success = false,
+                        Message = "Permission not allowed.",
+                        Data = null
+                    };
+                }
+
+                if (registerModel == null ||
+                    string.IsNullOrWhiteSpace(registerModel.companyName) ||
+                    string.IsNullOrWhiteSpace(registerModel.peNumber))
+                {
+                    return new ApiResponse<RegisterNewCompanyResult>
+                    {
+                        Success = false,
+                        Message = "Kindly fill all fields correctly to continue.",
+                        Data = null
+                    };
+                }
+
+                var admin = await _companyService.CheckAdminExistAsync(ctx.Email, accessContext.DatabaseName);
+                if (admin == null || admin.adminID <= 0)
+                {
+                    return new ApiResponse<RegisterNewCompanyResult>
+                    {
+                        Success = false,
+                        Message = "Unable to find current admin.",
+                        Data = null
+                    };
+                }
+
+                var companyList = await _companyService.CheckCompanyExistAsync(registerModel.peNumber);
+                if (companyList != null && companyList.Count > 0)
+                {
+                    return new ApiResponse<RegisterNewCompanyResult>
+                    {
+                        Success = false,
+                        Message = "company already exist.",
+                        Data = null
+                    };
+                }
+
+                var currentCompany = await _companyService.GetCompanyByIdAsync(accessContext.CompanyId, accessContext.DatabaseName);
+                int timezoneId = currentCompany?.timezoneID ?? 0;
+
+                var newCompany = await _companyService.CreateCompanyNewDBAsync(
+                    registerModel.companyName,
+                    registerModel.peNumber,
+                    false,
+                    accessContext.DatabaseName,
+                    accessContext.CompanyId,
+                    timezoneId);
+
+                if (newCompany == null || newCompany.companyId <= 0)
+                {
+                    return new ApiResponse<RegisterNewCompanyResult>
+                    {
+                        Success = false,
+                        Message = "Something went wrong. Try again creating a company.",
+                        Data = null
+                    };
+                }
+
+                await _companyService.InsertAdminCompanyAsync(newCompany.companyId, admin.adminID, true, accessContext.DatabaseName);
+
+                Roles role = await _companyService.InsertAdminRoleAsync(accessContext.DatabaseName, newCompany.companyId, admin.email ?? ctx.Email);
+                await _adminsService.AddAdminRole(admin.adminID, role.roleID, admin.email ?? ctx.Email, accessContext.DatabaseName, newCompany.companyId);
+
+                department newDept = await _departmentService.CreateDepartmentAsync("default", "0001", accessContext.UserId, accessContext.DatabaseName);
+
+                if (newDept != null && newDept.departmentID > 0)
+                {
+                    await _companyService.CreateCompanyDepartmentAsync(
+                        newDept.departmentID,
+                        newCompany.companyId,
+                        admin.adminID.ToString(),
+                        accessContext.DatabaseName);
+                }
+
+                return new ApiResponse<RegisterNewCompanyResult>
+                {
+                    Success = true,
+                    Message = "Company is created successfully.",
+                    Data = new RegisterNewCompanyResult
+                    {
+                        companyId = newCompany.companyId,
+                        departmentId = newDept?.departmentID ?? 0,
+                        adminId = admin.adminID,
+                        companyName = newCompany.name,
+                        message = "Company is created successfully."
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                await _companyService.InsertException(
+                    ex.Source ?? string.Empty,
+                    ex.Message,
+                    "CompanyManager.RegisterNewCompanyAsync",
+                    ex.StackTrace ?? string.Empty,
+                    ex.InnerException?.ToString() ?? string.Empty);
+
+                return new ApiResponse<RegisterNewCompanyResult>
+                {
+                    Success = false,
+                    Message = "Something went wrong. Try again creating a company.",
+                    Data = null
+                };
+            }
+        }
+
+        private async Task<UserAccessContext?> ResolveAccessContextAsync(CurrentUserContext ctx)
+        {
+            return await _userAccessContextManager.GetAsync(ctx);
+        }
+
         private static bool IsValidRegisterRequest(registerCompany registerModel)
         {
             if (registerModel == null)
@@ -515,5 +688,6 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
             string randomVal = Regex.Replace(Guid.NewGuid().ToString(), "[^a-zA-Z0-9]", string.Empty);
             return $"{dbName}.{randomVal.Substring(0, 6)}";
         }
+
     }
 }

@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
@@ -13,7 +12,9 @@ using WorkAttend.API.Gateway.DAL.services.AdminPanelServices;
 using WorkAttend.API.Gateway.DAL.services.AdminsServices;
 using WorkAttend.API.Gateway.DAL.services.AuthServices;
 using WorkAttend.API.Gateway.DAL.services.CompanyServices;
+using WorkAttend.API.Gateway.DAL.services.DakarIntegrationServices;
 using WorkAttend.API.Gateway.DAL.services.DashboardServices;
+using WorkAttend.API.Gateway.DAL.services.DepartmentServices;
 using WorkAttend.API.Gateway.DAL.services.EmployeeProjHistoryServices;
 using WorkAttend.API.Gateway.DAL.services.EmployeeServices;
 using WorkAttend.API.Gateway.DAL.services.GeoFenceServices;
@@ -98,6 +99,10 @@ namespace WorkAttend
             builder.Services.AddScoped<IJobsService, JobsService>();
             builder.Services.AddScoped<IAuthManager, AuthManager>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IDepartmentManager, DepartmentManager>();
+            builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+            builder.Services.AddScoped<IDakarIntegrationManager, DakarIntegrationManager>();
+            builder.Services.AddScoped<IDakarIntegrationService, DakarIntegrationService>();
 
             var jwtKey = builder.Configuration["JwtSettings:Key"];
             var jwtIssuer = builder.Configuration["JwtSettings:Issuer"];

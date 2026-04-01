@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WorkAttend.API.Gateway.BLL.CommonCode.Helpers;
 using WorkAttend.API.Gateway.BLL.InterfaceBLL;
 using WorkAttend.Model.Models;
 using WorkAttend.Shared.Helpers;
@@ -111,6 +112,34 @@ namespace WorkAttend.API.Gateway.Controllers
                     Data = null
                 });
             }
+        }
+
+        [Authorize]
+        [HttpPost("register-new-company")]
+        public async Task<IActionResult> RegisterNewCompany([FromBody] registerNewCompany registerModel)
+        {
+            var ctx = CurrentUserContextHelper.Get(User);
+            if (ctx == null)
+            {
+                return Unauthorized(new ApiResponse<RegisterNewCompanyResult>
+                {
+                    Success = false,
+                    Message = "Unauthorized",
+                    Data = null
+                });
+            }
+
+            var response = await _companyManager.RegisterNewCompanyAsync(ctx, registerModel);
+
+            if (!response.Success)
+            {
+                if (response.Message == "Unauthorized")
+                    return Unauthorized(response);
+
+                return BadRequest(response);
+            }
+
+            return Ok(response);
         }
     }
 }

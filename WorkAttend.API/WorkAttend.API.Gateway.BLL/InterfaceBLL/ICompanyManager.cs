@@ -8,5 +8,6 @@ namespace WorkAttend.API.Gateway.BLL.InterfaceBLL
         Task<ApiResponse<RegisterCompanyPageData>> GetRegisterDataAsync();
         Task<ApiResponse<CompanyRegistrationCheckResponse>> CompanyURLExistAsync(CompanyRegistrationCheckRequest model);
         Task<ApiResponse<RegisterCompanyResult>> RegisterCompanyAsync(registerCompany registerModel);
+        Task<ApiResponse<RegisterNewCompanyResult>> RegisterNewCompanyAsync(CurrentUserContext ctx, registerNewCompany registerModel);
     }
 }

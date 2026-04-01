@@ -1,4 +1,7 @@
-﻿using System;
+﻿using PetaPoco;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using WorkAttend.API.Gateway.DAL.Common.Helper;
 using WorkAttend.Model.Models;
@@ -137,6 +140,127 @@ namespace WorkAttend.API.Gateway.DAL.services.CompanyServices
             newCompanyDepartment.companyDeptID = int.Parse(id.ToString()!);
 
             return Task.FromResult(newCompanyDepartment);
+        }
+
+        public Task<int> GetDatabaseCompanyCountAsync(string databaseName)
+        {
+            var repository = DataContextHelper.GetCompanyDataContext(databaseName);
+            using var db = repository.GetDatabase();
+
+            var sql = Sql.Builder
+                .Select("count(*)")
+                .From("companies c")
+                .Where("c.isDeleted != 1");
+
+            int count = db.Fetch<int>(sql).FirstOrDefault();
+            return Task.FromResult(count);
+        }
+
+        public Task<List<company>> CheckCompanyExistAsync(string peNumber)
+        {
+            var repository = DataContextHelper.GetWorkAttendBaseContext();
+            using var db = repository.GetDatabase();
+
+            var sql = Sql.Builder
+                .Select("*")
+                .From("companies c")
+                .Where("penumber = @0 and isDeleted != 1", peNumber);
+
+            var data = db.Fetch<company>(sql).ToList();
+            return Task.FromResult(data);
+        }
+
+        public Task<workattendadmin?> CheckAdminExistAsync(string email, string databaseName)
+        {
+            var repository = DataContextHelper.GetCompanyDataContext(databaseName);
+            using var db = repository.GetDatabase();
+
+            var sql = Sql.Builder
+                .Select("*")
+                .From("admins")
+                .Where("email = @0 and isDeleted != 1", email);
+
+            var admin = db.Fetch<workattendadmin>(sql).FirstOrDefault();
+            return Task.FromResult(admin);
+        }
+
+        public Task<company?> GetCompanyByIdAsync(int companyId, string databaseName)
+        {
+            var repository = DataContextHelper.GetCompanyDataContext(databaseName);
+            using var db = repository.GetDatabase();
+
+            var sql = Sql.Builder
+                .Select("*")
+                .From("companies")
+                .Where("companyID = @0 and isDeleted != 1", companyId);
+
+            var companyData = db.Fetch<company>(sql).FirstOrDefault();
+            return Task.FromResult(companyData);
+        }
+
+        public Task<companyadmin> InsertAdminCompanyAsync(int companyId, int adminId, bool isSuperAdmin, string databaseName)
+        {
+            DateTime now = DateTime.Now;
+
+            companyadmin newCompanyAdmin = new companyadmin
+            {
+                companyId = companyId,
+                adminId = adminId,
+                IsSuperAdmin = isSuperAdmin,
+                createdOn = now,
+                createdBy = adminId.ToString(),
+                updatedOn = now,
+                updatedBy = adminId.ToString()
+            };
+
+            var repository = DataContextHelper.GetCompanyDataContext(databaseName);
+            using var db = repository.GetDatabase();
+
+            object id = db.Insert(newCompanyAdmin);
+            newCompanyAdmin.companyAdminId = int.Parse(id.ToString()!);
+
+            return Task.FromResult(newCompanyAdmin);
+        }
+
+        public Task<string> GetAdminPolicyAsync(string databaseName)
+        {
+            var repository = DataContextHelper.GetCompanyDataContext(databaseName);
+            using var db = repository.GetDatabase();
+
+            var sql = Sql.Builder
+                .Select("policy")
+                .From("roles")
+                .Where("name = @0", "Administrator");
+
+            string policy = db.Fetch<string>(sql).FirstOrDefault();
+            return Task.FromResult(policy ?? string.Empty);
+        }
+
+        public async Task<Roles> InsertAdminRoleAsync(string databaseName, int companyId, string adminEmail)
+        {
+            string policy = await GetAdminPolicyAsync(databaseName);
+            DateTime now = DateTime.Now;
+
+            Roles newRole = new Roles
+            {
+                name = "Administrator",
+                description = "all responsbilities",
+                policy = policy,
+                companyID = companyId,
+                isSystem = true,
+                createdOn = now,
+                createdBy = adminEmail,
+                updatedOn = now,
+                updatedBy = adminEmail
+            };
+
+            var repository = DataContextHelper.GetCompanyDataContext(databaseName);
+            using var db = repository.GetDatabase();
+
+            object id = db.Insert(newRole);
+            newRole.roleID = int.Parse(id.ToString()!);
+
+            return newRole;
         }
 
         public Task InsertException(string source, string message, string originatedAt, string stackTrace, string innerExceptionMessage)
