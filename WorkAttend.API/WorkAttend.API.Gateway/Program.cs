@@ -11,8 +11,14 @@ using WorkAttend.API.Gateway.DAL.Repositories;
 using WorkAttend.API.Gateway.DAL.services.ActivityServices;
 using WorkAttend.API.Gateway.DAL.services.AdminPanelServices;
 using WorkAttend.API.Gateway.DAL.services.AdminsServices;
+using WorkAttend.API.Gateway.DAL.services.AuthServices;
 using WorkAttend.API.Gateway.DAL.services.CompanyServices;
+using WorkAttend.API.Gateway.DAL.services.DashboardServices;
+using WorkAttend.API.Gateway.DAL.services.EmployeeProjHistoryServices;
 using WorkAttend.API.Gateway.DAL.services.EmployeeServices;
+using WorkAttend.API.Gateway.DAL.services.GeoFenceServices;
+using WorkAttend.API.Gateway.DAL.services.HomeServices;
+using WorkAttend.API.Gateway.DAL.services.JobsServices;
 using WorkAttend.SecurityToken;
 
 namespace WorkAttend
@@ -79,6 +85,19 @@ namespace WorkAttend
             builder.Services.AddScoped<ICompanyManager, CompanyManager>();
             builder.Services.AddScoped<ICompanyService, CompanyService>();
             builder.Services.AddScoped<CompanyRegistrationHelper, CompanyRegistrationHelper>();
+            builder.Services.AddScoped<IDashboardManager, DashboardManager>();
+            builder.Services.AddScoped<IDashboardService, DashboardService>();
+            builder.Services.AddScoped<IEmployeeProjHistoryManager, EmployeeProjHistoryManager>();
+            builder.Services.AddScoped<IEmployeeProjHistoryService, EmployeeProjHistoryService>();
+            builder.Services.AddScoped<IGeoFenceManager, GeoFenceManager>();
+            builder.Services.AddScoped<IGeoFenceService, GeoFenceService>();
+            builder.Services.AddScoped<IHomeManager, HomeManager>();
+            builder.Services.AddScoped<IHomeService, HomeService>();
+            builder.Services.AddScoped<HomeDataHelper>();
+            builder.Services.AddScoped<IJobsManager, JobsManager>();
+            builder.Services.AddScoped<IJobsService, JobsService>();
+            builder.Services.AddScoped<IAuthManager, AuthManager>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             var jwtKey = builder.Configuration["JwtSettings:Key"];
             var jwtIssuer = builder.Configuration["JwtSettings:Issuer"];

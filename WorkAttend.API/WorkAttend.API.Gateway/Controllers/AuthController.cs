@@ -5,6 +5,7 @@ using WorkAttend.Model.Models.Auth;
 using WorkAttend.SecurityToken;
 using WorkAttend.Shared.Helpers;
 
+
 namespace WorkAttend.API.Gateway.Controllers
 {
     [Route("api/[controller]")]
@@ -12,11 +13,13 @@ namespace WorkAttend.API.Gateway.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAdminsManager _adminsManager;
+        private readonly IAuthManager _authManager;
         private readonly TokenGenerator _tokenGenerator;
 
-        public AuthController(IAdminsManager adminsManager, TokenGenerator tokenGenerator)
+        public AuthController(IAdminsManager adminsManager,IAuthManager authManager,TokenGenerator tokenGenerator)
         {
             _adminsManager = adminsManager;
+            _authManager = authManager;
             _tokenGenerator = tokenGenerator;
         }
 
@@ -185,6 +188,54 @@ namespace WorkAttend.API.Gateway.Controllers
                     Message = "Something went wrong."
                 });
             }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("company-exists")]
+        public async Task<IActionResult> CompanyExists([FromBody] CompanyExistsRequest request)
+        {
+            var response = await _authManager.CompanyExistsAsync(request);
+
+            if (!response.Success)
+                return BadRequest(response);
+
+            return Ok(response);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            var response = await _authManager.ForgotPasswordAsync(request);
+
+            if (!response.Success)
+                return BadRequest(response);
+
+            return Ok(response);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("validate-reset-token")]
+        public async Task<IActionResult> ValidateResetToken([FromBody] ValidateResetTokenRequest request)
+        {
+            var response = await _authManager.ValidateResetTokenAsync(request);
+
+            if (!response.Success)
+                return BadRequest(response);
+
+            return Ok(response);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("update-password")]
+        public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordRequest request)
+        {
+            var response = await _authManager.UpdatePasswordAsync(request);
+
+            if (!response.Success)
+                return BadRequest(response);
+
+            return Ok(response);
         }
     }
 }

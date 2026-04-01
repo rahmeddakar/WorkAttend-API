@@ -64,5 +64,49 @@ namespace WorkAttend.Shared.Helpers
                 return false;
             }
         }
+
+        public static async Task<bool> SendPasswordResetEmail(
+    IConfiguration configuration,
+    string toEmail,
+    string toName,
+    string resetUrl)
+        {
+            try
+            {
+                var apiKey =
+                    configuration["AppSettings:SGApiKey"] ??
+                    configuration["SGApiKey"];
+
+                if (string.IsNullOrWhiteSpace(apiKey))
+                    return false;
+
+                var displayName = new CultureInfo("en-US").TextInfo.ToTitleCase(toName ?? string.Empty);
+
+                string body = $@"
+            <html>
+            <body style='font-family: Arial, sans-serif;'>
+                <h2>Reset Your WorkAttend Password</h2>
+                <p>Hello {displayName},</p>
+                <p>We received a request to reset your password.</p>
+                <p>Please click the link below to reset your password:</p>
+                <p><a href='{resetUrl}' target='_blank'>Reset Password</a></p>
+                <p>If you did not request this, you can safely ignore this email.</p>
+            </body>
+            </html>";
+
+                var fromAddress = new EmailAddress("no-reply@workattend.com", "Dakar Software Systems");
+                var toAddress = new EmailAddress(toEmail, displayName);
+
+                var client = new SendGridClient(apiKey);
+                var msg = MailHelper.CreateSingleEmail(fromAddress, toAddress, "WorkAttend - Forgot Password", string.Empty, body);
+
+                var response = await client.SendEmailAsync(msg);
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

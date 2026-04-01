@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Newtonsoft.Json;
+
 namespace WorkAttend.Model.Models
 {
     public class Punch
@@ -15,8 +8,8 @@ namespace WorkAttend.Model.Models
         public int employeeID { get; set; }
         public string locationName { get; set; }
         public int locationID { get; set; }
-        public SelectList EmployeeList { get; set; }
-        public SelectList locationList { get; set; }
+        public List<Employees> employees { get; set; } = new List<Employees>();
+        public List<Location> locations { get; set; } = new List<Location>();
         public List<PunchDetail> punchDetails { get; set; }
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }
@@ -58,8 +51,8 @@ namespace WorkAttend.Model.Models
         public List<timeSheetPunch> punchTimeSheetList { get; set; }
         public int employeeID { get; set; }
         public int locationID { get; set; }
-        public SelectList EmployeeList { get; set; }
-        public SelectList locationList { get; set; }
+        public List<Employees> employees { get; set; } = new List<Employees>();
+        public List<Location> locations { get; set; } = new List<Location>();
 
     }
     public class timeSheet
@@ -104,8 +97,8 @@ namespace WorkAttend.Model.Models
         public List<projectTimeSheet> projectTsList { get; set; }
         public int employeeID { get; set; }
         public int locationID { get; set; }
-        public SelectList EmployeeList { get; set; }
-        public SelectList locationList { get; set; }
+        public List<Employees> employees { get; set; } = new List<Employees>();
+        public List<Location> locations { get; set; } = new List<Location>();
     }
 
     public class projectTimeSheet
