@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WorkAttend.API.Gateway.BLL.InterfaceBLL;
+using WorkAttend.API.Gateway.DAL.Common.Helper;
 using WorkAttend.API.Gateway.DAL.services.DashboardServices;
 using WorkAttend.Model.Models;
 using WorkAttend.Shared.Enums;
@@ -155,7 +156,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"StartDate={startDate:O}, EndDate={endDate:O}",
                     exception: ex);
 
-                await _dashboardService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "DashboardManager.GetStatsAsync",

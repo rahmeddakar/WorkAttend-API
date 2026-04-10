@@ -8,6 +8,5 @@ namespace WorkAttend.API.Gateway.DAL.services.EmployeeProjHistoryServices
     {
         Task<List<Employees>> GetEmployeesAsync(int companyId, int departmentId, string databaseName);
         Task<List<Location>> GetLocationsAsync(int companyId, string databaseName);
-        Task InsertException(string source, string message, string originatedAt, string stackTrace, string innerExceptionMessage);
     }
 }

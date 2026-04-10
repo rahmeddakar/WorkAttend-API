@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using WorkAttend.API.Gateway.BLL.InterfaceBLL;
+using WorkAttend.API.Gateway.DAL.Common.Helper;
 using WorkAttend.API.Gateway.DAL.services.EmployeeProjHistoryServices;
 using WorkAttend.Model.Models;
 using WorkAttend.Shared.Helpers;
@@ -92,7 +93,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"DatabaseName={ctx.DatabaseName}",
                     exception: ex);
 
-                await _employeeProjHistoryService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "EmployeeProjHistoryManager.GetPageDataAsync",

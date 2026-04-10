@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkAttend.API.Gateway.BLL.InterfaceBLL;
+using WorkAttend.API.Gateway.DAL.Common.Helper;
 using WorkAttend.API.Gateway.DAL.services.AdminPanelServices;
 using WorkAttend.Model.Models;
 using WorkAttend.Shared.Enums;
@@ -102,7 +103,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"IsDakarConnected={isDakarConnected}, CompanyName={companyName}, PackageId={packageId}, Limit={limit}",
                     exception: ex);
 
-                await _adminPanelService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "AdminPanelManager.GetDataAsync",
@@ -193,7 +194,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: string.Empty,
                     exception: ex);
 
-                await _adminPanelService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "AdminPanelManager.GetPackagesAsync",
@@ -318,7 +319,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"CompanyId={companyId}",
                     exception: ex);
 
-                await _adminPanelService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "AdminPanelManager.GetCompanyDetailAsync",

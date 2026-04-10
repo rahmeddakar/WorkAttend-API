@@ -46,7 +46,6 @@ namespace WorkAttend.API.Gateway.DAL.services.EmployeeServices
             string databaseName,
             string searchValue);
 
-        Task InsertException(string source, string message, string originatedAt, string stackTrace, string innerExceptionMessage);
         Task<EmployeesLocation?> GetSingleEmployeeLocationAsync(int employeeId, int locationId, string databaseName);
         Task<bool> CreateEmployeeLocationAsync(int employeeId, int locationId, string userId, string databaseName);
         Task<bool> DeleteEmployeeLocationAsync(int employeeId, string locationName, int companyId, string userId, string databaseName);

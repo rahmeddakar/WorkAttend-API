@@ -13,6 +13,5 @@ namespace WorkAttend.API.Gateway.DAL.services.GeoFenceServices
         Task<bool> SoftDeleteLocationAsync(int locationId, string userId, string databaseName);
         Task<LocationModel?> GetLocationAsync(int locationId, string databaseName);
         Task<bool> UpdateLocationAsync(string userId, LocationModel location, string databaseName);
-        Task InsertException(string source, string message, string originatedAt, string stackTrace, string innerExceptionMessage);
     }
 }

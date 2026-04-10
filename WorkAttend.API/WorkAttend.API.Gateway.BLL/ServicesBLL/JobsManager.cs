@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkAttend.API.Gateway.BLL.InterfaceBLL;
+using WorkAttend.API.Gateway.DAL.Common.Helper;
 using WorkAttend.API.Gateway.DAL.services.JobsServices;
 using WorkAttend.Model.Models;
 using WorkAttend.Shared.Enums;
@@ -97,7 +98,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"DatabaseName={ctx.DatabaseName}",
                     exception: ex);
 
-                await _jobsService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "JobsManager.GetJobsAsync",
@@ -258,7 +259,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"JobId={model?.JobID}, JobName={model?.name}",
                     exception: ex);
 
-                await _jobsService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "JobsManager.SaveJobAsync",

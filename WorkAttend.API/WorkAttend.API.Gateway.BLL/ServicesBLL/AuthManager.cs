@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using WorkAttend.API.Gateway.BLL.InterfaceBLL;
+using WorkAttend.API.Gateway.DAL.Common.Helper;
 using WorkAttend.API.Gateway.DAL.services.AuthServices;
 using WorkAttend.Model.Models;
 using WorkAttend.Model.Models.Auth;
@@ -70,7 +71,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"CompanyURL={request?.companyURL}",
                     exception: ex);
 
-                await _authService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "AuthManager.CompanyExistsAsync",
@@ -213,7 +214,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"CompanyURL={request?.companyURL}",
                     exception: ex);
 
-                await _authService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "AuthManager.ForgotPasswordAsync",
@@ -301,7 +302,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"CompanyURL={request?.companyURL}",
                     exception: ex);
 
-                await _authService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "AuthManager.ValidateResetTokenAsync",
@@ -423,7 +424,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"CompanyURL={request?.companyURL}",
                     exception: ex);
 
-                await _authService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "AuthManager.UpdatePasswordAsync",

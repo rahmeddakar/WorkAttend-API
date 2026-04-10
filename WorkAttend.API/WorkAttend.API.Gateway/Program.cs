@@ -20,6 +20,13 @@ using WorkAttend.API.Gateway.DAL.services.EmployeeServices;
 using WorkAttend.API.Gateway.DAL.services.GeoFenceServices;
 using WorkAttend.API.Gateway.DAL.services.HomeServices;
 using WorkAttend.API.Gateway.DAL.services.JobsServices;
+using WorkAttend.API.Gateway.DAL.services.ProjectServices;
+using WorkAttend.API.Gateway.DAL.services.PunchActivityServices;
+using WorkAttend.API.Gateway.DAL.services.PunchHistoryMapServices;
+using WorkAttend.API.Gateway.DAL.services.PunchHistoryServices;
+using WorkAttend.API.Gateway.DAL.services.QuestionnaireServices;
+using WorkAttend.API.Gateway.DAL.services.SubscriptionServices;
+using WorkAttend.API.Gateway.DAL.services.TimeSheetServices;
 using WorkAttend.SecurityToken;
 
 namespace WorkAttend
@@ -103,6 +110,22 @@ namespace WorkAttend
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();
             builder.Services.AddScoped<IDakarIntegrationManager, DakarIntegrationManager>();
             builder.Services.AddScoped<IDakarIntegrationService, DakarIntegrationService>();
+            builder.Services.AddScoped<IProjectManager, ProjectManager>();
+            builder.Services.AddScoped<IProjectService, ProjectService>();
+            builder.Services.AddScoped<ITimeSheetManager, TimeSheetManager>();
+            builder.Services.AddScoped<ITimeSheetService, TimeSheetService>();
+            builder.Services.AddScoped<IPunchActivityManager, PunchActivityManager>();
+            builder.Services.AddScoped<IPunchActivityService, PunchActivityService>();
+            builder.Services.AddScoped<IPunchHistoryManager, PunchHistoryManager>();
+            builder.Services.AddScoped<IPunchHistoryService, PunchHistoryService>();
+            builder.Services.AddScoped<IPunchHistoryMapManager, PunchHistoryMapManager>();
+            builder.Services.AddScoped<IPunchHistoryMapService, PunchHistoryMapService>();
+            builder.Services.AddScoped<IQuestionnaireManager, QuestionnaireManager>();
+            builder.Services.AddScoped<IQuestionnaireService, QuestionnaireService>();
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddScoped<ISubscriptionManager, SubscriptionManager>();
+            builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
+            builder.Services.AddScoped<SubscriptionPaymentHelper>();
 
             var jwtKey = builder.Configuration["JwtSettings:Key"];
             var jwtIssuer = builder.Configuration["JwtSettings:Issuer"];

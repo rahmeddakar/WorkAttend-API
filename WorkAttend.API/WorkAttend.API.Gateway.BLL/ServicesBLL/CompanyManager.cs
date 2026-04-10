@@ -88,7 +88,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: string.Empty,
                     exception: ex);
 
-                await _companyService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "CompanyManager.GetRegisterDataAsync",
@@ -162,7 +162,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"CompanyURL={model?.companyURL}, PENumber={model?.peNumber}",
                     exception: ex);
 
-                await _companyService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "CompanyManager.CompanyURLExistAsync",
@@ -476,7 +476,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"CompanyName={registerModel?.companyName}, CompanyURL={registerModel?.companyURL}",
                     exception: ex);
 
-                await _companyService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "CompanyManager.RegisterCompanyAsync",
@@ -629,7 +629,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     Data = new RegisterNewCompanyResult
                     {
                         companyId = newCompany.companyId,
-                        departmentId = newDept?.departmentID ?? 0,
+                        departmentId = newDept?.departmentID ?? 1,
                         adminId = admin.adminID,
                         companyName = newCompany.name,
                         message = "Company is created successfully."
@@ -638,7 +638,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
             }
             catch (Exception ex)
             {
-                await _companyService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "CompanyManager.RegisterNewCompanyAsync",

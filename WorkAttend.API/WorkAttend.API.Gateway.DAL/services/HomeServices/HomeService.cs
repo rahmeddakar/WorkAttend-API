@@ -87,32 +87,6 @@ namespace WorkAttend.API.Gateway.DAL.services.HomeServices
             document.Close();
             return Task.FromResult(memoryStream.ToArray());
         }
-
-        public Task InsertException(string source, string message, string originatedAt, string stackTrace, string innerExceptionMessage)
-        {
-            DateTime now = DateTime.Now;
-
-            appexception newException = new appexception
-            {
-                source = source,
-                message = message,
-                originatedAt = originatedAt,
-                stacktrace = stackTrace,
-                innerexceptionmessage = innerExceptionMessage,
-                createdOn = now,
-                createdBy = "system",
-                updatedOn = now,
-                updatedBy = "system"
-            };
-
-            var repository = DataContextHelper.GetWorkAttendBaseContext();
-            using var db = repository.GetDatabase();
-
-            db.Insert(newException);
-
-            return Task.CompletedTask;
-        }
-
         private static void AddHeaderCell(PdfPTable table, string text)
         {
             var cell = new PdfPCell(new Phrase(text, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 9)))

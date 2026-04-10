@@ -25,9 +25,7 @@ namespace WorkAttend.API.Gateway.DAL.services.AdminsServices
         Task<companyadmin> AddCompanyAdmin(int adminId, int companyId, string databaseName);
         Task<workattendadmin> AddAdmin(string adminEmail, string password, string userId, string databaseName, string name);
         Task<adminroles> AddAdminRole(int adminId, int roleId, string userId, string databaseName, int companyId);
-
         Task<bool> DeleteAdmin(int adminId, string userId, int companyId, string databaseName);
-        Task InsertException(string source, string message, string originatedAt, string stackTrace, string innerExceptionMessage);
         Task<UserAccessContext?> GetUserAccessContextAsync(string userId, string databaseName);
     }
 }

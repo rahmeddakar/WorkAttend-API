@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using WorkAttend.API.Gateway.BLL.InterfaceBLL;
+using WorkAttend.API.Gateway.DAL.Common.Helper;
 using WorkAttend.API.Gateway.DAL.services.EmployeeServices;
 using WorkAttend.Model.Models;
 using WorkAttend.Shared.Enums;
@@ -97,7 +98,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"DatabaseName={ctx.DatabaseName}",
                     exception: ex);
 
-                await _employeeService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "EmployeeManager.GetEmployeePageDataAsync",
@@ -336,7 +337,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"Email={model?.emailEmployee}",
                     exception: ex);
 
-                await _employeeService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "EmployeeManager.CreateEmployeeAsync",
@@ -469,7 +470,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"EmployeeId={employeeId}",
                     exception: ex);
 
-                await _employeeService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "EmployeeManager.DeleteEmployeeAsync",
@@ -651,7 +652,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"EmployeeId={model?.employeeID}",
                     exception: ex);
 
-                await _employeeService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "EmployeeManager.EditEmployeeAsync",
@@ -777,7 +778,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"DatabaseName={ctx.DatabaseName}",
                     exception: ex);
 
-                await _employeeService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "EmployeeManager.GetEmployeeLocationsPageDataAsync",
@@ -875,7 +876,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"Draw={draw}, Start={start}, Length={length}, EmployeeId={employeeId}, LocationId={locationId}, SearchValue={searchValue}",
                     exception: ex);
 
-                await _employeeService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "EmployeeManager.GetEmployeeLocationsTableDataAsync",
@@ -1086,7 +1087,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"EmployeeId={model?.employeeID}, LocationId={model?.locationID}",
                     exception: ex);
 
-                await _employeeService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "EmployeeManager.CreateEmployeeLocationAsync",
@@ -1220,7 +1221,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"EmployeeId={model?.employeeID}, LocationName={model?.locationName}",
                     exception: ex);
 
-                await _employeeService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "EmployeeManager.DeleteEmployeeLocationAsync",
@@ -1349,7 +1350,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"Option={option}",
                     exception: ex);
 
-                await _employeeService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "EmployeeManager.SetCheckinReenableAsync",

@@ -367,12 +367,7 @@ namespace WorkAttend.API.Gateway.Controllers
         }
 
         [HttpPost("employee-locations/table-data")]
-        public async Task<IActionResult> GetEmployeeLocationsTableData(
-    [FromForm] int draw,
-    [FromForm] int start,
-    [FromForm] int length,
-    [FromForm] int? employeeId,
-    [FromForm] int? locationId)
+        public async Task<IActionResult> GetEmployeeLocationsTableData([FromForm] int draw,[FromForm] int start,[FromForm] int length,[FromForm] int? employeeId,[FromForm] int? locationId)
         {
             try
             {

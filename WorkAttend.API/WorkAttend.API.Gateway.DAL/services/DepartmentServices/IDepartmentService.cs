@@ -13,6 +13,5 @@ namespace WorkAttend.API.Gateway.DAL.services.DepartmentServices
         Task<bool> UpdateDepartmentAsync(int departmentId, string departmentCode, string departmentName, string userId, string databaseName);
         Task<int> GetEmployeeDepartmentUsageCountAsync(string databaseName, int departmentId);
         Task<bool> DeleteDepartmentAsync(int departmentId, string userId, string databaseName);
-        Task InsertException(string source, string message, string originatedAt, string stackTrace, string innerExceptionMessage);
     }
 }

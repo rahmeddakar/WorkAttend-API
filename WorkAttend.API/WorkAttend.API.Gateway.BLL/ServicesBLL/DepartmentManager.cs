@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkAttend.API.Gateway.BLL.InterfaceBLL;
+using WorkAttend.API.Gateway.DAL.Common.Helper;
 using WorkAttend.API.Gateway.DAL.services.AdminsServices;
 using WorkAttend.API.Gateway.DAL.services.CompanyServices;
 using WorkAttend.API.Gateway.DAL.services.DepartmentServices;
@@ -69,7 +70,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
             }
             catch (Exception ex)
             {
-                await _departmentService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "DepartmentManager.GetDepartmentsAsync",
@@ -188,7 +189,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
             }
             catch (Exception ex)
             {
-                await _departmentService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "DepartmentManager.CreateDepartmentAsync",
@@ -261,7 +262,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
             }
             catch (Exception ex)
             {
-                await _departmentService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "DepartmentManager.UpdateDepartmentAsync",
@@ -346,7 +347,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
             }
             catch (Exception ex)
             {
-                await _departmentService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "DepartmentManager.DeleteDepartmentAsync",

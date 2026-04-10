@@ -8,6 +8,5 @@ namespace WorkAttend.API.Gateway.DAL.services.HomeServices
     {
         Task<byte[]> GenerateQrCodeAsync(string qrText);
         Task<byte[]> GenerateEmergencyListPdfAsync(List<emergencyList> emergencyLists);
-        Task InsertException(string source, string message, string originatedAt, string stackTrace, string innerExceptionMessage);
     }
 }

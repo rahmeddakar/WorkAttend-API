@@ -122,7 +122,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"CompanyURL={ctx.CompanyURL}",
                     exception: ex);
 
-                await _homeService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "HomeManager.GetQrCodeAsync",
@@ -304,7 +304,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"DatabaseName={ctx.DatabaseName}",
                     exception: ex);
 
-                await _homeService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "HomeManager.CreateEmergencyListPdfAsync",

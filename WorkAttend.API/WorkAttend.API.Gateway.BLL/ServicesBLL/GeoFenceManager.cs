@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WorkAttend.API.Gateway.BLL.InterfaceBLL;
+using WorkAttend.API.Gateway.DAL.Common.Helper;
 using WorkAttend.API.Gateway.DAL.services.AdminsServices;
 using WorkAttend.API.Gateway.DAL.services.GeoFenceServices;
 using WorkAttend.Model.Models;
@@ -104,7 +105,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"DatabaseName={ctx.DatabaseName}",
                     exception: ex);
 
-                await _geoFenceService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "GeoFenceManager.GetGeoFencesAsync",
@@ -259,7 +260,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"LocationName={model?.LocationName}",
                     exception: ex);
 
-                await _geoFenceService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "GeoFenceManager.CreateGeoFenceAsync",
@@ -385,7 +386,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"LocationId={id}",
                     exception: ex);
 
-                await _geoFenceService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "GeoFenceManager.DeleteGeoFenceAsync",
@@ -531,7 +532,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"LocationId={model?.Id}",
                     exception: ex);
 
-                await _geoFenceService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "GeoFenceManager.EditGeoFenceAsync",

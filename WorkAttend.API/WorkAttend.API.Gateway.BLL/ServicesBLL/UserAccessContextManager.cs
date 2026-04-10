@@ -67,6 +67,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                 dbContext.Email = currentUserContext.Email;
                 dbContext.DatabaseName = currentUserContext.DatabaseName;
                 dbContext.CompanyURL = currentUserContext.CompanyURL;
+                dbContext.DepartmentId = 0;
 
                 var cacheOptions = new MemoryCacheEntryOptions
                 {
@@ -107,6 +108,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
         private static string GetCacheKey(string databaseName, string userId)
         {
             return $"useraccess:{databaseName}:{userId}";
-        }
+        }        
+        
     }
 }

@@ -155,30 +155,5 @@ namespace WorkAttend.API.Gateway.DAL.services.JobsServices
                 throw;
             }
         }
-
-        public Task InsertException(string source, string message, string originatedAt, string stackTrace, string innerExceptionMessage)
-        {
-            DateTime now = DateTime.Now;
-
-            appexception newException = new appexception
-            {
-                source = source,
-                message = message,
-                originatedAt = originatedAt,
-                stacktrace = stackTrace,
-                innerexceptionmessage = innerExceptionMessage,
-                createdOn = now,
-                createdBy = "system",
-                updatedOn = now,
-                updatedBy = "system"
-            };
-
-            var repository = DataContextHelper.GetWorkAttendBaseContext();
-            using var db = repository.GetDatabase();
-
-            db.Insert(newException);
-
-            return Task.CompletedTask;
-        }
     }
 }

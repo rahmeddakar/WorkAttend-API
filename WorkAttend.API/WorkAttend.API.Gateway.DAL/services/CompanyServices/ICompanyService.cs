@@ -18,6 +18,5 @@ namespace WorkAttend.API.Gateway.DAL.services.CompanyServices
         Task<companyadmin> InsertAdminCompanyAsync(int companyId, int adminId, bool isSuperAdmin, string databaseName);
         Task<string> GetAdminPolicyAsync(string databaseName);
         Task<Roles> InsertAdminRoleAsync(string databaseName, int companyId, string adminEmail);
-        Task InsertException(string source, string message, string originatedAt, string stackTrace, string innerExceptionMessage);
     }
 }

@@ -11,7 +11,7 @@ namespace WorkAttend.Model.Models
     public class punchHistoryMap
     {
         public int employeeID { get; set; }
-        public SelectList EmployeeList { get; set; }
+        public List<Employees> EmployeeList { get; set; }
         public DateTime date { get; set; }
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }

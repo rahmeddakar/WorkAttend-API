@@ -5,7 +5,7 @@ namespace WorkAttend.API.Gateway.BLL.InterfaceBLL
 {
     public interface IUserAccessContextManager
     {
-        Task<UserAccessContext?> GetAsync(CurrentUserContext currentUserContext, bool forceRefresh = false);
+        Task<UserAccessContext?> GetAsync(CurrentUserContext ctx, bool forceRefresh = false);
         void Remove(string databaseName, string userId);
     }
 }

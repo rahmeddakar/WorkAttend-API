@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WorkAttend.API.Gateway.BLL.InterfaceBLL;
+using WorkAttend.API.Gateway.DAL.Common.Helper;
 using WorkAttend.API.Gateway.DAL.services.AdminsServices;
 using WorkAttend.Model.Models;
 using WorkAttend.Model.Models.Admin;
@@ -74,7 +75,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"CompanyURL={companyUrl}",
                     exception: ex);
 
-                await _adminsService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "AdminsManager.GetDatabaseNameByCompanyUrlAsync",
@@ -130,7 +131,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"DatabaseName={databaseName}, Email={email}",
                     exception: ex);
 
-                await _adminsService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "AdminsManager.ValidateAdminAsync",
@@ -193,7 +194,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"DatabaseName={databaseName}, CompanyURL={companyURL}, Email={email}",
                     exception: ex);
 
-                await _adminsService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "AdminsManager.GetUserAccessContextAsync",
@@ -259,7 +260,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"DatabaseName={ctx.DatabaseName}",
                     exception: ex);
 
-                await _adminsService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "AdminsManager.GetAdminsIndexDataAsync",
@@ -336,7 +337,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"DatabaseName={ctx.DatabaseName}",
                     exception: ex);
 
-                await _adminsService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "AdminsManager.GetRolesOverviewAsync",
@@ -392,7 +393,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"DatabaseName={ctx.DatabaseName}",
                     exception: ex);
 
-                await _adminsService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "AdminsManager.GetRolesOnlyAsync",
@@ -520,7 +521,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"RoleName={model?.roleName}",
                     exception: ex);
 
-                await _adminsService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "AdminsManager.CreateRoleAsync",
@@ -754,7 +755,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"AdminEmail={model?.adminEmail}",
                     exception: ex);
 
-                await _adminsService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "AdminsManager.CreateAdminAsync",
@@ -862,7 +863,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"AdminId={adminId}",
                     exception: ex);
 
-                await _adminsService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "AdminsManager.DeleteAdminAsync",

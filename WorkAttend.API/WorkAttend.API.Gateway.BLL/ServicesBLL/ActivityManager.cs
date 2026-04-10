@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkAttend.API.Gateway.BLL.InterfaceBLL;
 using WorkAttend.API.Gateway.DAL.services.ActivityServices;
+using WorkAttend.API.Gateway.DAL.Common.Helper;
 using WorkAttend.Model.Models;
 using WorkAttend.Shared.Enums;
 using WorkAttend.Shared.Helpers;
@@ -97,7 +98,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"DatabaseName={ctx.DatabaseName}",
                     exception: ex);
 
-                await _activityService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "ActivityManager.GetActivitiesAsync",
@@ -263,7 +264,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"ActivityId={model?.activityID}, ActivityName={model?.name}",
                     exception: ex);
 
-                await _activityService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "ActivityManager.SaveActivityAsync",
@@ -390,7 +391,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     description: $"ActivityId={activityId}",
                     exception: ex);
 
-                await _activityService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "ActivityManager.DeleteActivityAsync",

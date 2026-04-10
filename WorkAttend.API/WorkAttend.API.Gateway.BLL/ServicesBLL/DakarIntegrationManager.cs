@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using WorkAttend.API.Gateway.BLL.InterfaceBLL;
+using WorkAttend.API.Gateway.DAL.Common.Helper;
 using WorkAttend.API.Gateway.DAL.services.DakarIntegrationServices;
 using WorkAttend.Model.Models;
 using WorkAttend.Shared.Enums;
@@ -74,7 +75,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
             }
             catch (Exception ex)
             {
-                await _dakarIntegrationService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "DakarIntegrationManager.GetConfigAsync",
@@ -163,7 +164,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
             }
             catch (Exception ex)
             {
-                await _dakarIntegrationService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "DakarIntegrationManager.CreateConfigAsync",
@@ -233,7 +234,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
             }
             catch (Exception ex)
             {
-                await _dakarIntegrationService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "DakarIntegrationManager.UpdateConfigAsync",
@@ -298,7 +299,7 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
             }
             catch (Exception ex)
             {
-                await _dakarIntegrationService.InsertException(
+                await LoggingHelper.InsertException(
                     ex.Source ?? string.Empty,
                     ex.Message,
                     "DakarIntegrationManager.DeleteConfigAsync",

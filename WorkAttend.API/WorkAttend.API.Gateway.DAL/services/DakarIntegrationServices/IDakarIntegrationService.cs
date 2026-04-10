@@ -11,6 +11,5 @@ namespace WorkAttend.API.Gateway.DAL.services.DakarIntegrationServices
         Task<bool> UpdateDakarConnectedBaseAsync(int baseCompanyId, string userId);
         Task<bool> UpdateDakarURLAsync(int companyConfigId, string dakarURL, string companyCode, string siteCode, string userId);
         Task<bool> DeleteDakarURLAsync(int companyConfigId, string userId);
-        Task InsertException(string source, string message, string originatedAt, string stackTrace, string innerExceptionMessage);
     }
 }

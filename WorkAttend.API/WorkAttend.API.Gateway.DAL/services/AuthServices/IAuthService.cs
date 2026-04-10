@@ -16,6 +16,5 @@ namespace WorkAttend.API.Gateway.DAL.services.AuthServices
         Task<List<int>> GetAdminTokensAsync(string databaseName, int adminId);
         Task<bool> ExpireAllTokensAsync(string databaseName, List<int> tokenIds, int adminId);
         Task<bool> UpdateAdminPasswordAsync(int adminId, string password, string databaseName);
-        Task InsertException(string source, string message, string originatedAt, string stackTrace, string innerExceptionMessage);
     }
 }
