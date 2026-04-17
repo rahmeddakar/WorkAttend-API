@@ -4,7 +4,7 @@ using WorkAttend.API.Gateway.BLL.InterfaceBLL;
 using WorkAttend.Model.Models.Auth;
 using WorkAttend.SecurityToken;
 using WorkAttend.Shared.Helpers;
-
+using WorkAttend.API.Gateway.DAL.services.AuthServices;
 
 namespace WorkAttend.API.Gateway.Controllers
 {
@@ -15,11 +15,13 @@ namespace WorkAttend.API.Gateway.Controllers
         private readonly IAdminsManager _adminsManager;
         private readonly IAuthManager _authManager;
         private readonly TokenGenerator _tokenGenerator;
+        private readonly IAuthService _authService;
 
-        public AuthController(IAdminsManager adminsManager,IAuthManager authManager,TokenGenerator tokenGenerator)
+        public AuthController(IAdminsManager adminsManager,IAuthManager authManager,IAuthService authService,TokenGenerator tokenGenerator)
         {
             _adminsManager = adminsManager;
             _authManager = authManager;
+            _authService = authService;
             _tokenGenerator = tokenGenerator;
         }
 
@@ -149,7 +151,29 @@ namespace WorkAttend.API.Gateway.Controllers
                     role: "Admin",
                     databaseName: databaseName,
                     companyUrl: request.CompanyURL
-                );
+                    );
+
+                await _authService.ExpireAdminRefreshTokensAsync(
+                    admin.adminID,
+                    admin.email ?? admin.adminID.ToString(),
+                    databaseName);
+
+                string refreshToken = _tokenGenerator.GenerateRefreshToken();
+
+                var savedRefreshToken = await _authService.StoreRefreshTokenAsync(
+                    admin.adminID,
+                    refreshToken,
+                    databaseName,
+                    admin.email ?? admin.adminID.ToString());
+
+                if (savedRefreshToken == null || savedRefreshToken.adminrefreshtokenID <= 0)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new LoginResponseModel
+                    {
+                        IsSuccess = false,
+                        Message = "Unable to create session."
+                    });
+                }
 
                 AppLogger.Info(
                     message: "Login completed successfully",
@@ -163,6 +187,8 @@ namespace WorkAttend.API.Gateway.Controllers
                     IsSuccess = true,
                     Message = "Login successful.",
                     Token = token,
+                    RefreshToken = refreshToken,
+                    ExpiresInMinutes = _tokenGenerator.GetExpireMinutes(),
                     Email = admin.email ?? request.Email,
                     UserName = admin.name ?? request.Email,
                     Role = "Admin",
@@ -231,6 +257,18 @@ namespace WorkAttend.API.Gateway.Controllers
         public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordRequest request)
         {
             var response = await _authManager.UpdatePasswordAsync(request);
+
+            if (!response.Success)
+                return BadRequest(response);
+
+            return Ok(response);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("refresh")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
+        {
+            var response = await _authManager.RefreshTokenAsync(request);
 
             if (!response.Success)
                 return BadRequest(response);

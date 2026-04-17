@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WorkAttend.API.Gateway.DAL.Common.Helper;
 using WorkAttend.Model.Models;
+using WorkAttend.Model.Models.Auth;
 using WorkAttend.Shared.Helpers;
 
 namespace WorkAttend.API.Gateway.DAL.services.AuthServices
@@ -496,6 +497,76 @@ namespace WorkAttend.API.Gateway.DAL.services.AuthServices
 
                 throw;
             }
+        }
+
+        public Task<adminrefreshtoken?> StoreRefreshTokenAsync(int adminId, string token, string databaseName, string createdBy)
+        {
+            var repository = DataContextHelper.GetCompanyDataContext(databaseName);
+            using var db = repository.GetDatabase();
+
+            DateTime now = DateTime.Now;
+
+            var newToken = new adminrefreshtoken
+            {
+                adminID = adminId,
+                token = token,
+                expiryDate = now.AddDays(7),
+                isDeleted = false,
+                createdOn = now,
+                createdBy = createdBy,
+                updatedOn = now,
+                updatedBy = createdBy
+            };
+
+            object id = db.Insert(newToken);
+            newToken.adminrefreshtokenID = int.Parse(id.ToString()!);
+
+            return Task.FromResult<adminrefreshtoken?>(newToken);
+        }
+
+        public Task<adminrefreshtoken?> GetValidRefreshTokenAsync(string token, string databaseName)
+        {
+            var repository = DataContextHelper.GetCompanyDataContext(databaseName);
+            using var db = repository.GetDatabase();
+
+            DateTime now = DateTime.Now;
+
+            var sql = Sql.Builder
+                .Select("*")
+                .From("adminrefreshtoken")
+                .Where("token = @0 and expiryDate >= @1 and isDeleted != 1", token, now);
+
+            var refreshToken = db.Fetch<adminrefreshtoken>(sql).FirstOrDefault();
+
+            return Task.FromResult(refreshToken);
+        }
+
+        public Task<bool> ExpireRefreshTokenAsync(int refreshTokenId, string updatedBy, string databaseName)
+        {
+            var repository = DataContextHelper.GetCompanyDataContext(databaseName);
+            using var db = repository.GetDatabase();
+
+            db.Update<adminrefreshtoken>(
+                "SET isDeleted = 1, updatedOn = @0, updatedBy = @1 WHERE adminrefreshtokenID = @2",
+                DateTime.Now,
+                updatedBy,
+                refreshTokenId);
+
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> ExpireAdminRefreshTokensAsync(int adminId, string updatedBy, string databaseName)
+        {
+            var repository = DataContextHelper.GetCompanyDataContext(databaseName);
+            using var db = repository.GetDatabase();
+
+            db.Update<adminrefreshtoken>(
+                "SET isDeleted = 1, updatedOn = @0, updatedBy = @1 WHERE adminID = @2 and isDeleted != 1",
+                DateTime.Now,
+                updatedBy,
+                adminId);
+
+            return Task.FromResult(true);
         }
     }
 }

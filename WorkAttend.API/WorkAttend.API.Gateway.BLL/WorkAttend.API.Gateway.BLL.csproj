@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\WorkAttend.SecurityToken\WorkAttend.SecurityToken.csproj" />
     <ProjectReference Include="..\..\WorkAttend.Shared\WorkAttend.Shared.csproj" />
     <ProjectReference Include="..\WorkAttend.API.Gateway.DAL\WorkAttendAPI.Gateway.DAL.csproj" />
   </ItemGroup>

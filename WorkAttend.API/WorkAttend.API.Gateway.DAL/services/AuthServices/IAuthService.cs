@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkAttend.Model.Models;
+using WorkAttend.Model.Models.Auth;
 
 namespace WorkAttend.API.Gateway.DAL.services.AuthServices
 {
@@ -16,5 +17,9 @@ namespace WorkAttend.API.Gateway.DAL.services.AuthServices
         Task<List<int>> GetAdminTokensAsync(string databaseName, int adminId);
         Task<bool> ExpireAllTokensAsync(string databaseName, List<int> tokenIds, int adminId);
         Task<bool> UpdateAdminPasswordAsync(int adminId, string password, string databaseName);
+        Task<adminrefreshtoken?> StoreRefreshTokenAsync(int adminId, string token, string databaseName, string createdBy);
+        Task<adminrefreshtoken?> GetValidRefreshTokenAsync(string token, string databaseName);
+        Task<bool> ExpireRefreshTokenAsync(int refreshTokenId, string updatedBy, string databaseName);
+        Task<bool> ExpireAdminRefreshTokensAsync(int adminId, string updatedBy, string databaseName);
     }
 }

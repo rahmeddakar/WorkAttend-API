@@ -1,9 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace WorkAttend.SecurityToken
@@ -62,5 +64,41 @@ namespace WorkAttend.SecurityToken
 
         public static string? GetCompanyURL(ClaimsPrincipal user)
             => user.FindFirst("companyURL")?.Value;
+
+        public int GetExpireMinutes()
+        {
+            return _jwtConfig.ExpireMinutes;
+        }
+
+        public string GenerateRefreshToken()
+        {
+            var randomBytes = RandomNumberGenerator.GetBytes(64);
+            return WebEncoders.Base64UrlEncode(randomBytes);
+        }
+
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = false,
+                ValidIssuer = _jwtConfig.Issuer,
+                ValidAudience = _jwtConfig.Audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfig.Key))
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out Microsoft.IdentityModel.Tokens.SecurityToken securityToken);
+
+            if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+                !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new SecurityTokenException("Invalid token");
+            }
+
+            return principal;
+        }
     }
 }

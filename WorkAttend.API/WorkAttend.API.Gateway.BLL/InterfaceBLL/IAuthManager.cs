@@ -10,5 +10,6 @@ namespace WorkAttend.API.Gateway.BLL.InterfaceBLL
         Task<ApiResponse<bool>> ForgotPasswordAsync(ForgotPasswordRequest request);
         Task<ApiResponse<bool>> ValidateResetTokenAsync(ValidateResetTokenRequest request);
         Task<ApiResponse<bool>> UpdatePasswordAsync(UpdatePasswordRequest request);
+        Task<ApiResponse<AuthTokenResponse>> RefreshTokenAsync(RefreshTokenRequest request);
     }
 }

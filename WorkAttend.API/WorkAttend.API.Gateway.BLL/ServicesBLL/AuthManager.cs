@@ -7,6 +7,9 @@ using WorkAttend.API.Gateway.DAL.services.AuthServices;
 using WorkAttend.Model.Models;
 using WorkAttend.Model.Models.Auth;
 using WorkAttend.Shared.Helpers;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using WorkAttend.SecurityToken;
 
 namespace WorkAttend.API.Gateway.BLL.ServicesBLL
 {
@@ -14,13 +17,16 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
     {
         private readonly IAuthService _authService;
         private readonly IConfiguration _configuration;
+        private readonly TokenGenerator _tokenGenerator;
 
         public AuthManager(
             IAuthService authService,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            TokenGenerator tokenGenerator)
         {
             _authService = authService;
             _configuration = configuration;
+            _tokenGenerator = tokenGenerator;
         }
 
         public async Task<ApiResponse<bool>> CompanyExistsAsync(CompanyExistsRequest request)
@@ -436,6 +442,176 @@ namespace WorkAttend.API.Gateway.BLL.ServicesBLL
                     Success = false,
                     Message = "Something went wrong. Try again.",
                     Data = false
+                };
+            }
+        }
+
+        public async Task<ApiResponse<AuthTokenResponse>> RefreshTokenAsync(RefreshTokenRequest request)
+        {
+            try
+            {
+                AppLogger.Info(
+                    message: "Refresh token flow started",
+                    action: "RefreshToken",
+                    result: "Started",
+                    updatedBy: string.Empty,
+                    description: $"CompanyURL={request?.companyURL}");
+
+                if (request == null ||
+                    string.IsNullOrWhiteSpace(request.companyURL) ||
+                    string.IsNullOrWhiteSpace(request.accessToken) ||
+                    string.IsNullOrWhiteSpace(request.refreshToken))
+                {
+                    return new ApiResponse<AuthTokenResponse>
+                    {
+                        Success = false,
+                        Message = "Invalid refresh request.",
+                        Data = null
+                    };
+                }
+
+                var companyData = await _authService.GetCompanyConfigurationAsync(request.companyURL.Trim());
+                if (companyData == null || companyData.companyID <= 0 || string.IsNullOrWhiteSpace(companyData.databaseName))
+                {
+                    return new ApiResponse<AuthTokenResponse>
+                    {
+                        Success = false,
+                        Message = "Invalid refresh request.",
+                        Data = null
+                    };
+                }
+
+                var savedRefreshToken = await _authService.GetValidRefreshTokenAsync(
+                    request.refreshToken.Trim(),
+                    companyData.databaseName);
+
+                if (savedRefreshToken == null || savedRefreshToken.adminrefreshtokenID <= 0)
+                {
+                    return new ApiResponse<AuthTokenResponse>
+                    {
+                        Success = false,
+                        Message = "Session expired. Please login again.",
+                        Data = null
+                    };
+                }
+
+                ClaimsPrincipal principal;
+                try
+                {
+                    principal = _tokenGenerator.GetPrincipalFromExpiredToken(request.accessToken.Trim());
+                }
+                catch
+                {
+                    return new ApiResponse<AuthTokenResponse>
+                    {
+                        Success = false,
+                        Message = "Invalid access token.",
+                        Data = null
+                    };
+                }
+
+                string userIdFromToken =
+                    principal.FindFirst(ClaimTypes.NameIdentifier)?.Value ??
+                    principal.FindFirst(JwtRegisteredClaimNames.Sub)?.Value ??
+                    string.Empty;
+
+                if (!int.TryParse(userIdFromToken, out int adminId) || adminId <= 0 || adminId != savedRefreshToken.adminID)
+                {
+                    return new ApiResponse<AuthTokenResponse>
+                    {
+                        Success = false,
+                        Message = "Invalid refresh request.",
+                        Data = null
+                    };
+                }
+
+                var admin = await _authService.GetAdminByIdAsync(adminId, companyData.databaseName);
+                if (admin == null || admin.adminID <= 0 || admin.isDeleted)
+                {
+                    return new ApiResponse<AuthTokenResponse>
+                    {
+                        Success = false,
+                        Message = "Session expired. Please login again.",
+                        Data = null
+                    };
+                }
+
+                string role = principal.FindFirst(ClaimTypes.Role)?.Value ?? "Admin";
+                string userName = TokenGenerator.GetUserName(principal) ?? admin.name ?? string.Empty;
+                string email = principal.FindFirst(ClaimTypes.Email)?.Value ?? admin.email ?? string.Empty;
+                string databaseName = TokenGenerator.GetDatabaseName(principal) ?? companyData.databaseName;
+                string companyUrl = TokenGenerator.GetCompanyURL(principal) ?? request.companyURL.Trim();
+
+                string newAccessToken = _tokenGenerator.GenerateToken(
+                    admin.adminID.ToString(),
+                    userName,
+                    email,
+                    role,
+                    databaseName,
+                    companyUrl);
+
+                string newRefreshToken = _tokenGenerator.GenerateRefreshToken();
+
+                await _authService.ExpireRefreshTokenAsync(
+                    savedRefreshToken.adminrefreshtokenID,
+                    email,
+                    companyData.databaseName);
+
+                var newSavedRefreshToken = await _authService.StoreRefreshTokenAsync(
+                    admin.adminID,
+                    newRefreshToken,
+                    companyData.databaseName,
+                    email);
+
+                if (newSavedRefreshToken == null || newSavedRefreshToken.adminrefreshtokenID <= 0)
+                {
+                    return new ApiResponse<AuthTokenResponse>
+                    {
+                        Success = false,
+                        Message = "Unable to refresh session.",
+                        Data = null
+                    };
+                }
+
+                return new ApiResponse<AuthTokenResponse>
+                {
+                    Success = true,
+                    Message = "Token refreshed successfully.",
+                    Data = new AuthTokenResponse
+                    {
+                        accessToken = newAccessToken,
+                        refreshToken = newRefreshToken,
+                        expiresInMinutes = _tokenGenerator.GetExpireMinutes(),
+                        userId = admin.adminID.ToString(),
+                        userName = userName,
+                        email = email,
+                        role = role,
+                        companyURL = companyUrl
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error(
+                    message: "Refresh token flow failed",
+                    action: "RefreshToken",
+                    result: "Failed",
+                    updatedBy: string.Empty,
+                    description: $"CompanyURL={request?.companyURL}",
+                    exception: ex);
+
+                await LoggingHelper.InsertException(
+                    ex.Source ?? string.Empty,
+                    ex.Message,
+                    "AuthManager.RefreshTokenAsync",
+                    ex.StackTrace ?? string.Empty,
+                    ex.InnerException?.ToString() ?? string.Empty);
+
+                return new ApiResponse<AuthTokenResponse>
+                {
+                    Success = false,
+                    Message = "Something went wrong. Try again.",
+                    Data = null
                 };
             }
         }
